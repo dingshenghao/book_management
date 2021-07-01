@@ -19,4 +19,8 @@ from admins import views
 urlpatterns = [
     path('getUsers/', views.GetUsersView.as_view(), name='getUser'),
     path('deleteUser/<int:pk>/', views.DeleteUserView.as_view(), name='deleteUser'),
+
+    path('category/', views.GetCategoryView.as_view(), name='category'),
+    path('addBook/', views.AddBookView.as_view(), name='addBook'),
+    path('books/', views.GetBooksView.as_view(), name='books'),
 ]

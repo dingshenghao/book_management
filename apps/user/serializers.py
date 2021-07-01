@@ -8,7 +8,7 @@ from rest_framework.utils.serializer_helpers import ReturnDict
 
 from user.models import User
 
-auth = oss2.Auth('LTAI5t78wRZmQuUtVUQLYkt5', 'X1mctiwjRl74Yg4dpHsnHTmbPi2iWY')
+auth = oss2.Auth('yourAccessKeyId', 'yourAccessKeySecret')
 
 endpoint = 'https://oss-cn-beijing.aliyuncs.com'
 

@@ -139,6 +139,6 @@ class EditUserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.username = validated_data['username']
         instance.email = validated_data['email']
-        instance.desc = validated_data['desc']
+        instance.desc = validated_data.get('desc', '')
         instance.save()
         return instance

@@ -1,7 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, UpdateAPIView
-import oss2
+from rest_framework.generics import CreateAPIView, UpdateAPIView, DestroyAPIView
 
 from user.models import User
 from user.serializers import LoginSerializer, RegisterSerializer, ImgSerializer, EditUserSerializer
@@ -27,7 +26,7 @@ class RegisterView(APIView):
             serializer.save()
             return Response({'status': 200, 'message': '注册成功', 'data': serializer.data})
         else:
-            return Response({'status': 400, 'message': serializer.errors['non_field_errors'][0]})
+            return Response({'status': 400, 'message': serializer.errors['username'][0], 'data': None})
 
 
 class UploadIconView(APIView):

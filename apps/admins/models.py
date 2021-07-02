@@ -10,7 +10,7 @@ class Book(BaseModel):
     book_index = models.CharField(verbose_name='图书索引', max_length=30, null=False)
     ISBN = models.CharField(verbose_name='ISBN号', max_length=40, null=False)
     img = models.CharField(verbose_name='图书封面路径', max_length=1024, null=False)
-    category_id = models.IntegerField(verbose_name='分类id', max_length=20, null=False, default=5)
+    category_id = models.IntegerField(verbose_name='分类id', null=False, default=5)
 
     class Meta:
         db_table = 'book'

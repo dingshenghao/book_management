@@ -23,4 +23,6 @@ urlpatterns = [
     path('category/', views.GetCategoryView.as_view(), name='category'),
     path('addBook/', views.AddBookView.as_view(), name='addBook'),
     path('books/', views.GetBooksView.as_view(), name='books'),
+    path('editBook/<int:pk>/', views.EditBookView.as_view(), name='editBook'),
+    path('deleteBook/<int:pk>/', views.DeleteBookView.as_view(), name='deleteBook')
 ]

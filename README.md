@@ -1,6 +1,6 @@
 # book_management
 
-###学生管理系统
+### 学生管理系统
 采用前后端分离方式开发 django + vue
 
 

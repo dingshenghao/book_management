@@ -40,4 +40,8 @@ urlpatterns = [
     path('getReservations/', views.GetReservationListView.as_view(), name='getReservationList'),
     path('agreeReservation/', views.AgreeReservationView.as_view(), name='agreeReservation'),
 
+    path('getBookByCategory/<int:pk>/', views.GetBooksByCategoryView.as_view(), name='getBookByCategory'),
+
+    path('searchBook/', views.SearchBookView.as_view(), name='searchBook'),
+
 ]

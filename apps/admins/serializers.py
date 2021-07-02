@@ -4,7 +4,7 @@ import oss2
 from admins.models import Book, Borrows
 from user.models import User
 
-
+auth = oss2.Auth('yourAccessKeyId', 'yourAccessKeySecret')
 
 endpoint = 'https://oss-cn-beijing.aliyuncs.com'
 

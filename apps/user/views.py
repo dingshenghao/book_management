@@ -10,7 +10,6 @@ class LoginView(APIView):
 
     def post(self, request):
         query_dict = request.data.copy()
-        print(query_dict)
         serializer = LoginSerializer(data=query_dict)
         if serializer.is_valid():
             return Response({'status': 200, 'message': '登录成功', 'data': serializer.validate(query_dict)})

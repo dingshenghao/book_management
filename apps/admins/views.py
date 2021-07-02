@@ -143,7 +143,8 @@ class GetBorrowsBook(APIView):
                     'ISBN': book_model.ISBN,
                     'img': book_model.img,
                     'create_time': str(book_model.create_time).split('.')[0],
-                    'book_status': 1 if Borrows.objects.filter(book_id=book_model.id, status=2).count() > 0 else 0
+                    'book_status': 1 if Borrows.objects.filter(user_id=user_id, book_id=book_model.id,
+                                                               status=2).count() > 0 else 0
                 })
         return Response({'status': 200, 'message': 'success', 'data': book_list})
 
@@ -264,3 +265,56 @@ class AgreeReservationView(APIView):
             return Response({'status': 200, 'message': '同意预约'})
         else:
             return Response({'status': 400, 'message': serializer.errors['non_field_errors'][0]})
+
+
+class GetBooksByCategoryView(APIView):
+
+    def get(self, request, pk):
+        book_models = Book.objects.filter(category_id=pk)
+        book_list = []
+        for book_model in book_models:
+            book_list.append({
+                'id': book_model.id,
+                'name': book_model.name,
+                'product': book_model.product,
+                'principal': book_model.principal,
+                'category_id': book_model.category_id,
+                'category': Category.objects.get(id=book_model.category_id).name,
+                'book_index': book_model.book_index,
+                'ISBN': book_model.ISBN,
+                'img': book_model.img,
+                'create_time': str(book_model.create_time).split('.')[0]
+            })
+        return Response({'status': 200, 'message': 'success', 'data': book_list})
+
+
+class SearchBookView(APIView):
+
+    def post(self, request):
+        query_dict = request.data
+        name = query_dict.get('name', '')
+        principal = query_dict.get('principal', '')
+        product = query_dict.get('product', '')
+        if name == '' and principal == '' and product == '':
+            return Response({'status': 400, 'message': '请输入查询条件'})
+        else:
+            book_models = Book.objects.filter(name__icontains=name, product__icontains=product,
+                                              principal__icontains=principal)
+            book_list = []
+            for book_model in book_models:
+                book_list.append({
+                    'id': book_model.id,
+                    'name': book_model.name,
+                    'product': book_model.product,
+                    'principal': book_model.principal,
+                    'category_id': book_model.category_id,
+                    'category': Category.objects.get(id=book_model.category_id).name,
+                    'book_index': book_model.book_index,
+                    'ISBN': book_model.ISBN,
+                    'img': book_model.img,
+                    'create_time': str(book_model.create_time).split('.')[0]
+                })
+            if len(book_list) > 0:
+                return Response({'status': 200, 'message': '查询成功', 'data': book_list})
+            else:
+                return Response({'status': 200, 'message': '没有您要查询的数据', 'data': book_list})

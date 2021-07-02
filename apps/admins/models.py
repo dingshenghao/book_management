@@ -23,3 +23,13 @@ class Category(BaseModel):
     class Meta:
         db_table = 'category'
         verbose_name = '图书分类'
+
+
+class Borrows(BaseModel):
+    book_id = models.IntegerField(verbose_name='图书ID')
+    user_id = models.IntegerField(verbose_name='用户ID')
+    status = models.IntegerField(default=0, verbose_name='图书状态;0 未还书，1 已还书，2 预约中')
+
+    class Meta:
+        db_table = 'borrows'
+        verbose_name = '借书记录'

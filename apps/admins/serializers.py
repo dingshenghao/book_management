@@ -1,7 +1,9 @@
 from rest_framework import serializers
 import oss2
 
-from admins.models import Book
+from admins.models import Book, Borrows
+from user.models import User
+
 
 
 endpoint = 'https://oss-cn-beijing.aliyuncs.com'
@@ -75,4 +77,78 @@ class EditBookFileSerializer(serializers.ModelSerializer):
         result = upload_file_to_oss(file)
         validated_data['img'] = result
         super(EditBookFileSerializer, self).update(instance, validated_data)
+        return instance
+
+
+class BorrowsSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(label='用户ID')
+    book_id = serializers.IntegerField(label='图书ID')
+
+    def validate(self, attrs):
+        user_id = attrs['user_id']
+        book_id = attrs['book_id']
+        try:
+            user = User.objects.get(id=user_id, is_active=1)
+            book = Book.objects.get(id=book_id)
+        except User.DoesNotExist:
+            raise serializers.ValidationError('用户不存在')
+        except Book.DoesNotExist:
+            raise serializers.ValidationError("图书不存在")
+        count1 = Borrows.objects.filter(book_id=book_id, user_id=user_id, status=2).count()
+        if count1 > 0:
+            raise serializers.ValidationError("您已预约该图书")
+        return attrs
+
+    def create(self, validated_data):
+        borrow = Borrows(**validated_data)
+        borrow.save()
+        return borrow
+
+
+class BackBookSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(label='用户ID')
+    book_id = serializers.IntegerField(label='图书ID')
+
+    def update(self, instance, validated_data):
+        instance.status = 1
+        instance.save()
+        return instance
+
+
+class ReservationSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(label='用户ID')
+    book_id = serializers.IntegerField(label='图书ID')
+
+    def validate(self, attrs):
+        user_id = attrs['user_id']
+        book_id = attrs['book_id']
+        try:
+            user = User.objects.get(id=user_id, is_active=1)
+            book = Book.objects.get(id=book_id)
+        except User.DoesNotExist:
+            raise serializers.ValidationError('用户不存在')
+        except Book.DoesNotExist:
+            raise serializers.ValidationError("图书不存在")
+        return attrs
+
+    def create(self, validated_data):
+        borrow = Borrows(**validated_data)
+        borrow.status = 2
+        borrow.save()
+        return borrow
+
+
+class AgreeReservationSerializer(serializers.Serializer):
+    borrow_id = serializers.IntegerField(label='借书记录ID')
+
+    def validate(self, attrs):
+        try:
+            Borrows.objects.get(id=attrs['borrow_id'], status=2)
+        except Borrows.DoesNotExist:
+            raise serializers.ValidationError('图书不存在')
+        return attrs
+
+    def update(self, instance, validated_data):
+        instance.status = 1
+        instance.save()
         return instance

@@ -24,5 +24,20 @@ urlpatterns = [
     path('addBook/', views.AddBookView.as_view(), name='addBook'),
     path('books/', views.GetBooksView.as_view(), name='books'),
     path('editBook/<int:pk>/', views.EditBookView.as_view(), name='editBook'),
-    path('deleteBook/<int:pk>/', views.DeleteBookView.as_view(), name='deleteBook')
+    path('deleteBook/<int:pk>/', views.DeleteBookView.as_view(), name='deleteBook'),
+
+    path("getBorrow/", views.GetBorrowsBook.as_view(), name='getBorrow'),
+    path("getBorrow1/", views.GetBorrowsBook1.as_view(), name='getBorrow1'),
+
+    path('borrowBook/', views.BorrowBookView.as_view(), name='borrowBook'),
+    path('backBook/', views.BackBookView.as_view(), name='backBook'),
+
+    path('reservation/', views.ReservationBook.as_view(), name='reservationBook'),
+    path('unReservation/<int:pk>/', views.UnReservationView.as_view(), name='unReservation'),
+
+    path('history/<int:pk>/', views.GetHistoryView.as_view(), name='getHistory'),
+
+    path('getReservations/', views.GetReservationListView.as_view(), name='getReservationList'),
+    path('agreeReservation/', views.AgreeReservationView.as_view(), name='agreeReservation'),
+
 ]

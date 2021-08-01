@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
+import datetime
 import os, sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -175,4 +175,29 @@ LOGGING = {
 REST_FRAMEWORK = {
     # 异常处理
     'EXCEPTION_HANDLER': 'book_management.utils.exceptions.exception_handler',
+
+    # JTW 配置
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',  # session认证
+        'rest_framework.authentication.BasicAuthentication',  # 基本认证,
+        # 认证
+        'book_management.utils.AuthToken.UserAuthToken',  # 全局token认证
+    ],
+    # 权限
+    "DEFAULT_PERMISSION_CLASSES": ['book_management.utils.PermissionUtils.MyPremission'],  # 路径 + 权限类
+
+    # 节流
+    # "DEFAULT_THROTTLE_CLASSES": ['book_management.utils.throttle.VisitThrottle'],  # 路径 + 节流类
+    "DEFAULT_THROTTLE_CLASSES": ['book_management.utils.throttle.UserThrottle'],  # 全局配置，登录用户节流限制（10/m）
+    # 设置访问频率
+    "DEFAULT_THROTTLE_RATES": {
+        'throttle': '3/m',  # 没登录用户3/m，throttle就是scope定义的值,通过IP地址
+        'userThrottle': '10/m',  # 登录用户10/m，userThrottle就是scope定义的值， 通过 id
+    }
+
+}
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # 过期时间
 }

@@ -5,10 +5,12 @@ from rest_framework.views import APIView
 from admins.models import Category, Book, Borrows
 from admins.serializers import AddBookSerializer, EditBookSerializer, EditBookFileSerializer, BorrowsSerializer, \
     BackBookSerializer, ReservationSerializer, AgreeReservationSerializer
+from book_management.utils.PermissionUtils import MyPermisson
 from user.models import User
 
 
 class GetUsersView(APIView):
+    permission_classes = [MyPermisson, ]   # 不设置全局认证，单独设置认证
 
     def get(self, request):
         users = User.objects.filter(role=0, is_active=1)

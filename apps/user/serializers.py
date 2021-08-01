@@ -4,9 +4,9 @@ import uuid
 import oss2
 from django.contrib.auth.hashers import check_password
 from rest_framework import serializers
-from rest_framework.utils.serializer_helpers import ReturnDict
 
 from user.models import User
+from rest_framework_jwt.settings import api_settings
 
 auth = oss2.Auth('yourAccessKeyId', 'yourAccessKeySecret')
 
@@ -35,6 +35,16 @@ class LoginSerializer(serializers.Serializer):
             attrs['role'] = user.role
             attrs['email'] = user.email
             attrs['desc'] = user.desc
+
+            # 手动创建新令牌
+            jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+            jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+            payload = jwt_payload_handler(user)
+            token = jwt_encode_handler(payload)
+
+            attrs['token'] = token
+
             del attrs['password']
             return attrs
         else:

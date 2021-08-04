@@ -5,7 +5,7 @@
 from rest_framework.permissions import BasePermission
 
 
-class MyPermisson(BasePermission):
+class MyPermission(BasePermission):
     message = "必须是管理员才能执行此操作"  # 重写返回的提示信息
 
     def has_permission(self, request, view):

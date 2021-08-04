@@ -1,7 +1,9 @@
 from rest_framework import serializers
+from drf_haystack.serializers import HaystackSerializer
 import oss2
 
 from admins.models import Book, Borrows
+from admins.search_indexes import BookIndex
 from user.models import User
 
 auth = oss2.Auth('yourAccessKeyId', 'yourAccessKeySecret')
@@ -152,3 +154,20 @@ class AgreeReservationSerializer(serializers.Serializer):
         instance.status = 1
         instance.save()
         return instance
+
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = '__all__'
+
+
+class BookIndexSerializer(HaystackSerializer):
+    """
+    Book索引结果数据序列化器
+    """
+    object = BookSerializer(read_only=True)  # 只读,不可以进行反序列化
+
+    class Meta:
+        index_classes = [BookIndex]  # 索引类的名称
+        fields = ('text', 'object')  # text 由索引类进行返回, object 由序列化类进行返回,第一个参数必须是text

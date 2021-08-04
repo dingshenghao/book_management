@@ -1,0 +1,3 @@
+{{object.principal}}
+{{object.name}}
+{{object.product}}

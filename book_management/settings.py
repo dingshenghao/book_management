@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,12 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'haystack',  # elasticsearch
     'rest_framework',
 
     'user.apps.UserConfig',
     'admins.apps.AdminConfig'
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -185,7 +186,7 @@ REST_FRAMEWORK = {
         'book_management.utils.AuthToken.UserAuthToken',  # 全局token认证
     ],
     # 权限
-    "DEFAULT_PERMISSION_CLASSES": ['book_management.utils.PermissionUtils.MyPremission'],  # 路径 + 权限类
+    "DEFAULT_PERMISSION_CLASSES": ['book_management.utils.PermissionUtils.MyPermission'],  # 路径 + 权限类
 
     # 节流
     # "DEFAULT_THROTTLE_CLASSES": ['book_management.utils.throttle.VisitThrottle'],  # 路径 + 节流类
@@ -201,3 +202,15 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),  # 过期时间
 }
+
+# haystack配置（elasticsearch）
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://192.168.73.128:9200/',  # 此处为elasticsearch运行的服务器ip地址和端口
+        'INDEX_NAME': 'course',  # 指定elasticsearch建立的索引库名称
+    },
+}
+
+# 实时更新index
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

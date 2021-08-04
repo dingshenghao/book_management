@@ -1,16 +1,17 @@
+from drf_haystack.viewsets import HaystackViewSet
 from rest_framework.generics import DestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from admins.models import Category, Book, Borrows
 from admins.serializers import AddBookSerializer, EditBookSerializer, EditBookFileSerializer, BorrowsSerializer, \
-    BackBookSerializer, ReservationSerializer, AgreeReservationSerializer
-from book_management.utils.PermissionUtils import MyPermisson
+    BackBookSerializer, ReservationSerializer, AgreeReservationSerializer, BookIndexSerializer
+from book_management.utils.PermissionUtils import MyPermission
 from user.models import User
 
 
 class GetUsersView(APIView):
-    permission_classes = [MyPermisson, ]   # 不设置全局认证，单独设置认证
+    permission_classes = [MyPermission, ]  # 不设置全局认证，单独设置认证
 
     def get(self, request):
         users = User.objects.filter(role=0, is_active=1)
@@ -320,3 +321,14 @@ class SearchBookView(APIView):
                 return Response({'status': 200, 'message': '查询成功', 'data': book_list})
             else:
                 return Response({'status': 200, 'message': '没有您要查询的数据', 'data': book_list})
+
+
+class BookSearchViewSet(HaystackViewSet):
+    """
+    Book搜索
+    """
+    index_models = [Book]
+    serializer_class = BookIndexSerializer
+
+    permission_classes = []
+    authentication_classes = []

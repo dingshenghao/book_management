@@ -2,6 +2,7 @@ from drf_haystack.viewsets import HaystackViewSet
 from rest_framework.generics import DestroyAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 
 from admins.models import Category, Book, Borrows
 from admins.serializers import AddBookSerializer, EditBookSerializer, EditBookFileSerializer, BorrowsSerializer, \
@@ -25,6 +26,9 @@ class GetUsersView(APIView):
             }
             user_list.append(user)
         return Response({'status': 200, 'message': 'success', 'data': user_list})
+
+    def check_throttles(self, request):
+        pass
 
 
 class DeleteUserView(DestroyAPIView):
